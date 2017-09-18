@@ -24,8 +24,8 @@ def parseFile(fileName):
         params = item[index1:index2].split(", ")
         if "dishes" in item:
             dishes = int(params[0])
-            dish_width = [dishes]
-            demand = [dishes]
+            dish_width = []
+            demand = []
             continue
         if "separation" in item:
             separation = int(params[0])
@@ -56,6 +56,8 @@ def minimumTables():
 def computeDemands():
     for x in range(hot):
         dish_width[x] = str(dish_width[x]) + "h"
+    for x in range(len(demand)):
+        dish_width.append(dish_width[x])
 
 def printMinimizedOutputs():
     print ("dishes : " + str(dishes))
@@ -64,13 +66,54 @@ def printMinimizedOutputs():
     print ("tablewidth : " + str(table_width))
     print ("dish_width : " + str(dish_width))
     print ("demand : " + str(demand))
-    for items in itertools.permutations(dish_width,len(dish_width)):
-        print (items)
+
+def getTables(sequence):
+    global dishes
+    global separation
+    global hot 
+    global table_width 
+    global dish_width 
+    global demand 
+
+    numTables = 0
+    tableSize = 0
+
+    prev = "none"
+    curr = "none"
+    for item in sequence:
+
+        if isinstance(item, str):
+            curr = "hot"
+            item = int(item[:-1])
+        else:
+            curr = "cold"
+
+
+        if (prev != curr) or prev =="none":
+            if (tableSize + separation + item) > table_width:
+                numTables = numTables + 1
+                tableSize = 0
+            else:
+                tableSize = tableSize + separation + item
+
+        if (tableSize + item) > table_width:
+            numTables = numTables + 1
+            tableSize = 0
+        else:
+            tableSize = tableSize + item
+
+        prev = curr
+
+    return numTables
 
 def main():
     parseFile(sys.argv[1])
     minimumTables()
-    #printMinimizedOutputs()
     computeDemands()
+    #printMinimizedOutputs()
+    tablesNeeded = []
+    for items in itertools.permutations(dish_width,len(dish_width)):
+        tablesNeeded.append(getTables(items))
+    print ("tables(" + str(min(tablesNeeded))+").")
 
 main()
