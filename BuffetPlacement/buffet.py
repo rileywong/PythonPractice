@@ -1,34 +1,76 @@
 import sys
+import itertools
 
-global grid
+global dishes
+global separation
+global hot
+global table_width
+global dish_width 
+global demand
 
 def parseFile(fileName):
     f = open(fileName)
+    global dishes
+    global separation
+    global hot 
+    global table_width 
+    global dish_width 
+    global demand 
+    
+    
     for item in f:
         index1 = item.find('(')+1
         index2 = item.find(')')
         params = item[index1:index2].split(", ")
-        print(params)
         if "dishes" in item:
-            print ("dishes : " + params[0])
+            dishes = int(params[0])
+            dish_width = [dishes]
+            demand = [dishes]
             continue
         if "separation" in item:
-            print("separation : "params[0])
+            separation = int(params[0])
             continue
         if "hot" in item:
-            print("hot : "params[0])
+            hot = int(params[0])
             continue
         if "table_width" in item:
-            print ("table_width : " + params[0])
+            table_width = int(params[0])
             continue
         if "dish_width" in item:
-            print (params[0] + params[1])
+            try:
+                dish_width[int(params[0])] = int(params[1])
+            except IndexError:
+                dish_width.append(int(params[1]))
             continue
+
         if "demand" in item:
-            print (params[0] + params[1])
+            try:
+                demand[int(params[0])] = int(params[1])
+            except IndexError:
+                demand.append(int(params[1]))
             continue
-        
+         
+def minimumTables():
+    dishDict = {}
+
+def computeDemands():
+    for x in range(hot):
+        dish_width[x] = str(dish_width[x]) + "h"
+
+def printMinimizedOutputs():
+    print ("dishes : " + str(dishes))
+    print ("separation : " + str(separation))
+    print ("hot : " + str(hot))
+    print ("tablewidth : " + str(table_width))
+    print ("dish_width : " + str(dish_width))
+    print ("demand : " + str(demand))
+    for items in itertools.permutations(dish_width,len(dish_width)):
+        print (items)
+
 def main():
     parseFile(sys.argv[1])
+    minimumTables()
+    #printMinimizedOutputs()
+    computeDemands()
 
 main()
