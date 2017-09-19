@@ -1,12 +1,9 @@
-dishes(3).
+dishes(1).
 separation(1).
-hot(1).
+hot(0).
 table_width(4).
 
-dish_width(1, 1).
-dish_width(2, 1).
-dish_width(3, 2).
+dish_width(1, 4).
 
-demand(1, 2).
-demand(2, 2).
-demand(3, 1). 
+
+demand(1, 10).

@@ -57,7 +57,8 @@ def computeDemands():
     for x in range(hot):
         dish_width[x] = str(dish_width[x]) + "h"
     for x in range(len(demand)):
-        dish_width.append(dish_width[x])
+        for item in range(0,demand[x]):
+            dish_width.append(dish_width[x])
 
 def printMinimizedOutputs():
     print ("dishes : " + str(dishes))
@@ -75,7 +76,7 @@ def getTables(sequence):
     global dish_width 
     global demand 
 
-    numTables = 0
+    numTables = 1
     tableSize = 0
 
     prev = "none"
@@ -89,20 +90,28 @@ def getTables(sequence):
             curr = "cold"
 
 
-        if (prev != curr) or prev =="none":
+        if (prev != curr) and prev !="none":
             if (tableSize + separation + item) > table_width:
                 numTables = numTables + 1
-                tableSize = 0
+                prev = "none"
+                tableSize = item
+                continue
             else:
+                prev = curr
                 tableSize = tableSize + separation + item
+                continue
 
         if (tableSize + item) > table_width:
             numTables = numTables + 1
-            tableSize = 0
+            prev = "none"
+            tableSize = item
         else:
+            prev = curr
             tableSize = tableSize + item
 
-        prev = curr
+       
+
+
 
     return numTables
 
@@ -110,9 +119,10 @@ def main():
     parseFile(sys.argv[1])
     minimumTables()
     computeDemands()
-    #printMinimizedOutputs()
+    # printMinimizedOutputs()
     tablesNeeded = []
     for items in itertools.permutations(dish_width,len(dish_width)):
+        #print(items)
         tablesNeeded.append(getTables(items))
     print ("tables(" + str(min(tablesNeeded))+").")
 
