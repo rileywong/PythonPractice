@@ -8,7 +8,7 @@ global preferred
 global dispreferred
 
 def parseFile(fileName):
-    f = open(fileName)
+    f = open(fileName, 'r')
     global people
     global locations
     global preferences
@@ -55,10 +55,38 @@ def isViolation(num1,num2,sequence):
     else:
         return 1
 
+def generatePerference(personIndex):
+	preferencesOrder = []
+	for x in range(len(preferer)):
+		if preferer[x]==personIndex:
+			if preferred[x] in preferencesOrder:
+				preferencesOrder.append(dispreferred[x])
+			else:
+				preferencesOrder.append(preferred[x])
+				preferencesOrder.append(dispreferred[x])
+	return preferencesOrder
+
+def generateCombos(order):
+	combos = []
+	for x in range(len(order)-1):
+		for y in range(len(order)-x-1):
+			combos.append((order[x],order[y+1+x]))
+	return combos
 def main():
     parseFile(sys.argv[1])
     printMinimized()
     
+
+    peoplePreferences = []
+    for x in range(people):
+    	peoplePreferences.append(generatePerference(x+1))
+
+    combos = []
+    for x in range(len(peoplePreferences)):
+    	combos = combos + generateCombos(peoplePreferences[x])
+
+
+
 
 
 main()
