@@ -68,7 +68,7 @@ def printMinimizedOutputs():
     print ("dish_width : " + str(dish_width))
     print ("demand : " + str(demand))
 
-def getTables(sequence):
+def getTables(sequence,minTables):
     global dishes
     global separation
     global hot 
@@ -82,7 +82,8 @@ def getTables(sequence):
     prev = "none"
     curr = "none"
     for item in sequence:
-
+        if(numTables > minTables):
+            return 99999999
         if isinstance(item, str):
             curr = "hot"
             item = int(item[:-1])
@@ -120,10 +121,10 @@ def main():
     minimumTables()
     computeDemands()
     # printMinimizedOutputs()
-    tablesNeeded = []
+    mintables = 9999999
     for items in itertools.permutations(dish_width,len(dish_width)):
         #print(items)
-        tablesNeeded.append(getTables(items))
-    print ("tables(" + str(min(tablesNeeded))+").")
+        mintables = min(mintables,getTables(items,mintables))
+    print ("tables(" + str(mintables)+").")
 
 main()
